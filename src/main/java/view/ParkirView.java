@@ -170,23 +170,24 @@ public class ParkirView {
  
     public void tampilkanMenu(String namaPetugas) {
         System.out.println();
-        System.out.println(garis('='));
-        baris("");
-        baris(tengah("MY PARKIR GW"));
-        baris(tengah("SISTEM MANAJEMEN PARKIR KENDARAAN"));
-        baris("");
-        baris(tengah("Petugas: " + namaPetugas));
-        System.out.println(garis('='));
-        baris(tengah("MENU UTAMA"));
-        baris("");
-        baris("   [1]  Masuk Parkir (daftar + slot otomatis)");
-        baris("   [2]  Lihat Data Parkir");
-        baris("   [3]  Keluar Parkir (hitung & bayar)");
-        baris("   [4]  Hapus Data Parkir");
-        baris("   [5]  Cari Data Parkir");
-        baris("   [6]  Keluar");
-        baris("");
-        System.out.println(garis('-'));
+        System.out.println("|===================================================|");
+        System.out.println("|                                                   |");
+        System.out.println("|                🚗  MY PARKIR GW 🚗                  |");
+        System.out.println("|         SISTEM MANAJEMEN PARKIR KENDARAAN         |");
+        System.out.println("|                                                   |");
+        System.out.println("|           ------- Smart Parking  -------          |");
+        System.out.println("|                                                   |");
+        System.out.println("|===================================================|");
+        System.out.println("------------------- MENU UTAMA ----------------------");
+        System.out.println("|                                                   |");
+        System.out.println("|   [1]  Masuk Parkir                               |");
+        System.out.println("|   [2]  Lihat Data Parkir                          |");
+        System.out.println("|   [3]  Keluar Parkir                              |");
+        System.out.println("|   [4]  Hapus Data Parkir                          |");
+        System.out.println("|   [5]  Cari Data Parkir                           |");
+        System.out.println("|   [6]  Keluar                                     |");
+        System.out.println("|                                                   |");
+        System.out.println("-----------------------------------------------------");    
     }
  
     public void tampilkanRingkasanSlot(int motorKosong, int motorTotal,
