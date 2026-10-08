@@ -23,7 +23,7 @@ public class ParkirView {
         this.input = input;
     }
  
-    //Validasi input
+    // ===== Validasi input =====
     public int inputIntPositif(String pesan) {
         while (true) {
             try {
@@ -59,7 +59,9 @@ public class ParkirView {
             System.out.println("Input tidak boleh kosong!");
         }
     }
-    
+ 
+    // Password disembunyikan (tidak terlihat saat diketik).
+    // Jika tidak ada konsol asli (mis. Output NetBeans), otomatis jadi input biasa.
     public String inputPassword(String pesan) {
         java.io.Console konsol = System.console();
         while (true) {
@@ -108,6 +110,7 @@ public class ParkirView {
         }
     }
  
+    // Mengembalikan "Motor" atau "Mobil" (sudah dirapikan huruf besar-kecilnya)
     public String inputJenisKendaraan() {
         while (true) {
             String jenis = inputTidakKosong("Jenis Kendaraan (Motor/Mobil): ");
@@ -121,6 +124,7 @@ public class ParkirView {
         }
     }
  
+    // Mengembalikan "Cash" atau "QRIS"
     public String inputMetodePembayaran() {
         while (true) {
             String metode = inputTidakKosong("Metode Pembayaran (Cash/QRIS): ");
@@ -134,6 +138,7 @@ public class ParkirView {
         }
     }
  
+    // Format waktu: DD-MM-YYYY HH:MM, dicek benar-benar valid
     public String inputWaktu(String label) {
         while (true) {
             String waktu = inputTidakKosong(label + " [format DD-MM-YYYY HH:MM, contoh 24-09-2026 17:30]: ");
@@ -159,7 +164,7 @@ public class ParkirView {
         }
     }
  
-    //Tampilan
+    // ===== Tampilan =====
     private void baris(String teks) {
         System.out.printf("|%-51s|%n", teks);
     }
@@ -181,24 +186,22 @@ public class ParkirView {
         System.out.println("|===================================================|");
     }
  
-    public void tampilkanMenu(String namaPetugas) {
+    public void tampilkanMenu() {
         System.out.println();
         System.out.println("|===================================================|");
         baris("");
-        baris(tengah("MY PARKIR GW"));
+        baris(tengah("🚗 MY PARKIR GW 🚗"));
         baris(tengah("SISTEM MANAJEMEN PARKIR KENDARAAN"));
         baris("");
         System.out.println("|===================================================|");
-        baris(tengah("MENU UTAMA"));
         baris("");
-        baris("   [1]  Tambah Kendaraan");
-        baris("   [2]  Masuk Parkir");
-        baris("   [3]  Lihat Data Parkir");
-        baris("   [4]  Keluar Parkir (hitung & bayar)");
-        baris("   [5]  Hapus Data Parkir");
-        baris("   [6]  Cari Data Parkir");
-        baris("   [7]  Lihat Slot Parkir");
-        baris("   [8]  Keluar");
+        baris("   [1]  Masuk Parkir (daftar + slot otomatis)");
+        baris("   [2]  Lihat Data Parkir");
+        baris("   [3]  Keluar Parkir (hitung & bayar)");
+        baris("   [4]  Hapus Data Parkir");
+        baris("   [5]  Cari Data Parkir");
+        baris("   [6]  Lihat Slot Parkir");
+        baris("   [7]  Keluar");
         baris("");
         System.out.println("-----------------------------------------------------");
     }
@@ -212,7 +215,7 @@ public class ParkirView {
     public void tampilkanKendaraan(ArrayList<Kendaraan> daftar) {
         System.out.println("\n========== DATA KENDARAAN ==========");
         for (Kendaraan kendaraan : daftar) {
-            kendaraan.tampilkanInfo(); 
+            kendaraan.tampilkanInfo(); // polymorphism: Motor / Mobil
             System.out.println("------------------------------------");
         }
     }

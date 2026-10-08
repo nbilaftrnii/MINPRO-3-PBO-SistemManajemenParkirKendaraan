@@ -42,32 +42,29 @@ public class ParkirController {
             int pilihan = view.inputIntPositif("Pilih menu: ");
             switch (pilihan) {
                 case 1:
-                    tambahKendaraan();
-                    break;
-                case 2:
                     masukParkir();
                     break;
-                case 3:
+                case 2:
                     view.tampilkanParkir(service.getAllParkir());
                     break;
-                case 4:
+                case 3:
                     keluarParkir();
                     break;
-                case 5:
+                case 4:
                     hapusParkir();
                     break;
-                case 6:
+                case 5:
                     cariParkir();
                     break;
-                case 7:
+                case 6:
                     view.tampilkanSlot(service.getAllSlot());
                     break;
-                case 8:
+                case 7:
                     berjalan = false;
                     view.pesan("Sampai jumpa, " + petugasAktif.getNamaPetugas() + "!");
                     break;
                 default:
-                    view.pesan("Menu hanya 1 sampai 8!");
+                    view.pesan("Menu hanya 1 sampai 7!");
             }
         }
     }
@@ -94,47 +91,21 @@ public class ParkirController {
                 service.hitungSlotKosong("Mobil"), service.hitungTotalSlot("Mobil"));
     }
  
-    //Tambah Kendaraan
-    private void tambahKendaraan() {
-        System.out.println("\n=== TAMBAH KENDARAAN ===");
-        String plat = view.inputTidakKosong("Nomor Plat: ");
- 
-        if (service.cariKendaraan(plat) != null) { // overloading: cari by plat
-            view.pesan("Nomor plat sudah terdaftar!");
-            return;
-        }
- 
-        String jenis = view.inputJenisKendaraan();
-        String merk = view.inputMerk();
-        String warna = view.inputWarna();
-        int id = service.generateIdKendaraan();
- 
-        Kendaraan kendaraan;
-        if (jenis.equals("Motor")) {
-            int cc = view.inputIntRentang("Kapasitas mesin (cc, 50-2000): ", 50, 2000);
-            kendaraan = new Motor(id, plat, merk, warna, cc);
-        } else {
-            int pintu = view.inputIntRentang("Jumlah pintu (2-6): ", 2, 6);
-            kendaraan = new Mobil(id, plat, merk, warna, pintu);
-        }
- 
-        service.tambahKendaraan(kendaraan);
-        view.pesan("Data kendaraan berhasil ditambahkan. ID Kendaraan: " + id);
-    }
- 
     private void masukParkir() {
         System.out.println("\n=== MASUK PARKIR ===");
-        view.tampilkanKendaraan(service.getAllKendaraan());
+        String plat = view.inputTidakKosong("Nomor Plat: ");
  
-        int idKendaraan = view.inputIntPositif("ID Kendaraan: ");
-        Kendaraan kendaraan = service.cariKendaraan(idKendaraan); // overloading: cari by ID
-        if (kendaraan == null) {
-            view.pesan("Kendaraan tidak ditemukan!");
-            return;
-        }
-        if (service.sedangParkir(kendaraan)) {
-            view.pesan("Kendaraan ini masih parkir!");
-            return;
+        Kendaraan kendaraan = service.cariKendaraan(plat); // overloading: cari by plat
+        if (kendaraan != null) {
+            // Plat pernah terdaftar: data lama dipakai lagi
+            if (service.sedangParkir(kendaraan)) {
+                view.pesan("Kendaraan dengan plat ini masih parkir!");
+                return;
+            }
+            view.pesan("Kendaraan sudah terdaftar (" + kendaraan.getJenisKendaraan()
+                    + " " + kendaraan.getMerk() + "), data lama dipakai.");
+        } else {
+            kendaraan = daftarKendaraanBaru(plat);
         }
  
         SlotParkir slot = service.cariSlotKosong(kendaraan.getJenisKendaraan());
@@ -144,12 +115,32 @@ public class ParkirController {
         }
  
         String waktuMasuk = view.inputWaktu("Waktu Masuk");
+ 
+        // Kendaraan baru baru disimpan setelah semua pengecekan lolos
+        if (service.cariKendaraan(kendaraan.getIdKendaraan()) == null) { // overloading: cari by ID
+            service.tambahKendaraan(kendaraan);
+        }
+ 
         Parkir parkir = new Parkir(service.generateIdParkir(), kendaraan,
                 petugasAktif, slot, waktuMasuk);
         service.tambahParkir(parkir);
  
         view.pesan("Berhasil! Arahkan kendaraan ke slot " + slot.getNomorSlot()
                 + ". ID Parkir: " + parkir.getIdParkir());
+    }
+ 
+    private Kendaraan daftarKendaraanBaru(String plat) {
+        String jenis = view.inputJenisKendaraan();
+        String merk = view.inputMerk();
+        String warna = view.inputWarna();
+        int id = service.generateIdKendaraan();
+ 
+        if (jenis.equals("Motor")) {
+            int cc = view.inputIntRentang("Kapasitas mesin (cc, 50-2000): ", 50, 2000);
+            return new Motor(id, plat, merk, warna, cc);
+        }
+        int pintu = view.inputIntRentang("Jumlah pintu (2-6): ", 2, 6);
+        return new Mobil(id, plat, merk, warna, pintu);
     }
  
     //Keluar Parkir (update)
@@ -171,7 +162,7 @@ public class ParkirController {
         view.pesan("Waktu masuk  : " + parkir.getWaktuMasuk());
         int lamaJam = view.inputIntPositif("Lama Parkir (jam): ");
  
-        // Waktu keluar otomatis menyesuaikan waktu masuk + lama parkir
+        // Waktu keluar otomatis menyesuaikan: waktu masuk + lama parkir
         String waktuKeluar = parkir.hitungWaktuKeluar(lamaJam);
         view.pesan("Waktu keluar : " + waktuKeluar + " (otomatis)");
  
@@ -181,7 +172,7 @@ public class ParkirController {
  
         int jumlahBayar;
         if (metode.equals("QRIS")) {
-            jumlahBayar = tarif; //otomatis
+            jumlahBayar = tarif; // QRIS: otomatis sesuai tarif
             view.pesan("Pembayaran QRIS sesuai tarif: Rp" + tarif);
         } else {
             jumlahBayar = view.inputIntPositif("Jumlah Bayar: Rp");
