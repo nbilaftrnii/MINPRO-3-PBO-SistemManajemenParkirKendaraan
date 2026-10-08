@@ -57,7 +57,6 @@ public abstract class Kendaraan implements Bertarif {
         return nilai.trim();
     }
  
-    // ===== Abstract method: wajib di-override oleh Motor dan Mobil =====
     public abstract String getJenisKendaraan();
  
     protected abstract double getTarifPerJam();
