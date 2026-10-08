@@ -33,11 +33,11 @@ public class Petugas {
     }
  
     public void setPassword(String password) {
-        if (password == null || password.length() < 4) {
-            throw new IllegalArgumentException("Password minimal 4 karakter!");
-        }
-        this.password = password;
+    if (password == null || password.trim().isEmpty()) {
+        throw new IllegalArgumentException("Password tidak boleh kosong!");
     }
+    this.password = password;
+}
  
     public boolean cekLogin(String nama, String password) {
         return namaPetugas.equals(nama.trim()) && this.password.equals(password);
