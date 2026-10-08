@@ -60,8 +60,6 @@ public class ParkirView {
         }
     }
  
-    // Password disembunyikan (tidak terlihat saat diketik).
-    // Jika tidak ada konsol asli (mis. Output NetBeans), otomatis jadi input biasa.
     public String inputPassword(String pesan) {
         java.io.Console konsol = System.console();
         while (true) {
@@ -164,7 +162,7 @@ public class ParkirView {
         }
     }
  
-    // ===== Tampilan =====
+    //Tampilan 
     private void baris(String teks) {
         System.out.printf("|%-51s|%n", teks);
     }
@@ -189,21 +187,23 @@ public class ParkirView {
     public void tampilkanMenu() {
         System.out.println();
         System.out.println("|===================================================|");
-        baris("");
-        baris(tengah("🚗 MY PARKIR GW 🚗"));
-        baris(tengah("SISTEM MANAJEMEN PARKIR KENDARAAN"));
-        baris("");
-        System.out.println("|===================================================|");
-        baris("");
-        baris("   [1]  Masuk Parkir (daftar + slot otomatis)");
-        baris("   [2]  Lihat Data Parkir");
-        baris("   [3]  Keluar Parkir (hitung & bayar)");
-        baris("   [4]  Hapus Data Parkir");
-        baris("   [5]  Cari Data Parkir");
-        baris("   [6]  Lihat Slot Parkir");
-        baris("   [7]  Keluar");
-        baris("");
-        System.out.println("-----------------------------------------------------");
+            System.out.println("|                                                   |");
+            System.out.println("|                🚗  MY PARKIR GW 🚗                  |");
+            System.out.println("|         SISTEM MANAJEMEN PARKIR KENDARAAN         |");
+            System.out.println("|                                                   |");
+            System.out.println("|           ------- Smart Parking  -------          |");
+            System.out.println("|                                                   |");
+            System.out.println("|===================================================|");
+            System.out.println("------------------- MENU UTAMA ----------------------");
+            System.out.println("|                                                   |");
+            System.out.println("|   [1]  Masuk Parkir                               |");
+            System.out.println("|   [2]  Lihat Data Parkir                          |");
+            System.out.println("|   [3]  Keluar Parkir                              |");
+            System.out.println("|   [4]  Hapus Data Parkir                          |");
+            System.out.println("|   [5]  Cari Data Parkir                           |");
+            System.out.println("|   [6]  Keluar                                     |");
+            System.out.println("|                                                   |");
+            System.out.println("-----------------------------------------------------");    
     }
  
     public void tampilkanRingkasanSlot(int motorKosong, int motorTotal,
@@ -217,15 +217,6 @@ public class ParkirView {
         for (Kendaraan kendaraan : daftar) {
             kendaraan.tampilkanInfo(); // polymorphism: Motor / Mobil
             System.out.println("------------------------------------");
-        }
-    }
- 
-    public void tampilkanSlot(ArrayList<SlotParkir> daftar) {
-        System.out.println("\n========== DATA SLOT PARKIR ==========");
-        System.out.printf("%-8s %-8s %-8s%n", "Slot", "Jenis", "Status");
-        for (SlotParkir slot : daftar) {
-            System.out.printf("%-8s %-8s %-8s%n",
-                    slot.getNomorSlot(), slot.getJenisSlot(), slot.getStatusSlot());
         }
     }
  
