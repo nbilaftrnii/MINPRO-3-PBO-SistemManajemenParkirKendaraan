@@ -36,7 +36,7 @@ public class ParkirController {
  
         boolean berjalan = true;
         while (berjalan) {
-            view.tampilkanMenu(petugasAktif.getNamaPetugas());
+            view.tampilkanMenu();
             tampilkanRingkasanSlot();
  
             int pilihan = view.inputIntPositif("Pilih menu: ");
