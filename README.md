@@ -125,7 +125,8 @@ Program menampilkan menu utama yang berisi pilihan untuk menambah, melihat, memp
 
 Selain itu, menu juga menampilkan sisa slot yang tersedia.
 
-C. Masuk Parkir
+---
+### C. Masuk Parkir
 Menu ini menggabungkan Tambah Kendaraan dan Tambah Data Parkir menjadi satu langkah.
 
 <img width="572" height="278" alt="image" src="https://github.com/user-attachments/assets/97cde08e-4103-45b9-9c31-cb15c9e632b5" />
