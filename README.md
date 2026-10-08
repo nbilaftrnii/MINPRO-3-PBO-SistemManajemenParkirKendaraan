@@ -148,13 +148,13 @@ Sistem menampilkan seluruh data parkir yang telah tersimpan. Informasi yang dita
 
 **1. Metode Pembayaran Cash**
 
-<img width="296" height="480" alt="image" src="https://github.com/user-attachments/assets/c367d4d0-3069-402f-a3ce-fd9eef4a4f7c" />
+<img width="296" height="480" alt="image" src="https://github.com/user-attachments/assets/c367d4d0-3069-402f-a3ce-fd9eef4a4f7c" /><br>
 
 <img width="291" height="380" alt="image" src="https://github.com/user-attachments/assets/55b18d1a-7fb0-45f4-bf82-ed496f05b4ad" />
 
 **2. Metode Pembayaran Qris**
 
-<img width="379" height="303" alt="image" src="https://github.com/user-attachments/assets/e3b2cf45-6768-46b5-880a-a313e7c514e8" />
+<img width="379" height="303" alt="image" src="https://github.com/user-attachments/assets/e3b2cf45-6768-46b5-880a-a313e7c514e8" /><br>
 
 <img width="296" height="378" alt="image" src="https://github.com/user-attachments/assets/bdc9552a-6a85-42f9-b5e1-ce0f3efa5a7f" />
 
@@ -181,7 +181,7 @@ Sistem hanya menampilkan kendaraan yang masih parkir. Jika tidak ada, muncul pes
 
 **1. Batal Menghapus Data**
 
-<img width="291" height="512" alt="image" src="https://github.com/user-attachments/assets/d9fe18b3-5315-4028-b8c3-389730ac6436" />
+<img width="291" height="512" alt="image" src="https://github.com/user-attachments/assets/d9fe18b3-5315-4028-b8c3-389730ac6436" /><br>
 
 <img width="291" height="512" alt="image" src="https://github.com/user-attachments/assets/3662ea6f-7a3b-42c4-8241-eb5c74355c05" />
 
@@ -245,13 +245,13 @@ Selain itu, terdapat pula setter dengan kondisi. Setter pada data yang krusial d
 
 Adapun beberapa contoh penerapan encapsulation pada class lainnya,sebagai berikut.
 
-<img width="641" height="111" alt="image" src="https://github.com/user-attachments/assets/a1824643-e6b8-467c-ad62-8c454a77f899" />
+<img width="641" height="111" alt="image" src="https://github.com/user-attachments/assets/a1824643-e6b8-467c-ad62-8c454a77f899" /><br>
 
-<img width="699" height="105" alt="image" src="https://github.com/user-attachments/assets/a623d546-c0fd-4e73-b860-7680abd3fc4d" />
+<img width="699" height="105" alt="image" src="https://github.com/user-attachments/assets/a623d546-c0fd-4e73-b860-7680abd3fc4d" /><br>
 
-<img width="621" height="118" alt="image" src="https://github.com/user-attachments/assets/d63c1d0f-2edc-45e4-a14c-0d0f57a179f6" />
+<img width="621" height="118" alt="image" src="https://github.com/user-attachments/assets/d63c1d0f-2edc-45e4-a14c-0d0f57a179f6" /><br>
 
-<img width="640" height="219" alt="image" src="https://github.com/user-attachments/assets/a17ad171-c3da-4c3b-8164-2a47611fe8f5" />
+<img width="640" height="219" alt="image" src="https://github.com/user-attachments/assets/a17ad171-c3da-4c3b-8164-2a47611fe8f5" /><br>
 
 <img width="705" height="384" alt="image" src="https://github.com/user-attachments/assets/2dbaec76-76f2-4317-9d87-23ab44eb5f4b" />
 
@@ -269,7 +269,7 @@ Penerapan Validasi Input terdapat pada class **ParkirView.java.**
 
 Program memiliki beberapa method khusus untuk memastikan input yang diberikan user sesuai dengan ketentuan, berikut beberapa contohnya.
 
-<img width="667" height="455" alt="image" src="https://github.com/user-attachments/assets/b886e6ff-94f4-4e3a-a8f5-8d82630737e2" />
+<img width="667" height="455" alt="image" src="https://github.com/user-attachments/assets/b886e6ff-94f4-4e3a-a8f5-8d82630737e2" /><br>
 
 <img width="764" height="416" alt="image" src="https://github.com/user-attachments/assets/e240951d-1b31-4735-b4a2-1845a53d9ab3" />
 
