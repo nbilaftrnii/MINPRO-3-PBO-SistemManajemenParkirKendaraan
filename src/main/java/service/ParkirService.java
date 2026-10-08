@@ -13,8 +13,8 @@ import java.util.List;
  * @author ASUS
  */
 public class ParkirService {
-    private static final int JUMLAH_SLOT_MOTOR = 5;
-    private static final int JUMLAH_SLOT_MOBIL = 3;
+    private static final int JUMLAH_SLOT_MOTOR = 25;
+    private static final int JUMLAH_SLOT_MOBIL = 10;
  
     private final ArrayList<Petugas> daftarPetugas = new ArrayList<>();
     private final ArrayList<Kendaraan> daftarKendaraan = new ArrayList<>();
