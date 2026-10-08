@@ -56,25 +56,26 @@ Program menggunakan struktur MVC (Model-View-Controller) dengan beberapa package
 
 **1. model**
 
-Berisi class yang merepresentasikan objek dalam sistem, yaitu Kendaraan, Motor, Mobil, Petugas, SlotParkir, dan Parkir.
+  Berisi class yang merepresentasikan objek dalam sistem, yaitu Kendaraan, Motor, Mobil, Petugas, SlotParkir, dan Parkir.
 
 **2. view**
 
-Berisi ParkirView yang menangani tampilan menu, input user, validasi input, dan pesan yang ditampilkan kepada user.
+  Berisi ParkirView yang menangani tampilan menu, input user, validasi input, dan pesan yang ditampilkan kepada user.
 
 **3. controller**
 
-Berisi ParkirController yang mengatur alur program dan menghubungkan bagian View dengan Service.
+  Berisi ParkirController yang mengatur alur program dan menghubungkan bagian View dengan Service.
 
 **4. service**
 
-Berisi ParkirService yang menangani pengelolaan data menggunakan ArrayList, seperti tambah, cari, update, hapus, dan generate ID.
+  Berisi ParkirService yang menangani pengelolaan data menggunakan ArrayList, seperti tambah, cari, update, hapus, dan generate ID.
 
 **5. main**
 
-Berisi Main sebagai titik awal program. Class ini membuat object Service, View, dan Controller, kemudian menjalankan program.
+  Berisi Main sebagai titik awal program. Class ini membuat object Service, View, dan Controller, kemudian menjalankan program.
 
-### Pengembangan struktur
+---
+### ℹ️ Pengembangan struktur
 
 Package model kini juga berisi **interface Bertarif**, dan Kendaraan dibuat sebagai **abstract** class. Package service juga menangani login petugas dan pemilihan slot otomatis.
 
