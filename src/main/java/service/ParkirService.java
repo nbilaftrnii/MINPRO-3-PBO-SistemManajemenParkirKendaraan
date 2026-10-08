@@ -26,8 +26,8 @@ public class ParkirService {
  
     public ParkirService() {
         //Akun petugas (tambah/ubah akun dilakukan di sini)
-        daftarPetugas.add(new Petugas("Andi", "12345"));
-        daftarPetugas.add(new Petugas("Budi", "54321"));
+        daftarPetugas.add(new Petugas("Jai", "12345"));
+        daftarPetugas.add(new Petugas("Ahmad", "54321"));
  
         buatSlot("A", "Motor", JUMLAH_SLOT_MOTOR);
         buatSlot("B", "Mobil", JUMLAH_SLOT_MOBIL);
