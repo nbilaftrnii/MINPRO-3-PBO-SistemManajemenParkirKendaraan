@@ -18,13 +18,13 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-
+ 
         ParkirService service = new ParkirService();
         ParkirView view = new ParkirView(input);
         ParkirController controller = new ParkirController(service, view);
-
+ 
         controller.jalankan();
-
+ 
         input.close();
     }
 }

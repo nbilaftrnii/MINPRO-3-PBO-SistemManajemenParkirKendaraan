@@ -8,52 +8,38 @@ package model;
  *
  * @author ASUS
  */
-public class Petugas {
-   private int idPetugas;
-    private String namaPetugas;
-    private String username;
-    private String password;
-    private String shift;
 
-    public Petugas(int idPetugas, String namaPetugas, String username,
-                   String password, String shift) {
-        this.idPetugas = idPetugas;
-        this.namaPetugas = namaPetugas;
-        this.username = username;
-        this.password = password;
-        this.shift = shift;
+//Hanya petugas yang boleh login ke sistem
+//Petugas yang masuk ke sistem otomatis tercatat di setiap transaksi parkir.
+
+public class Petugas {
+    private String namaPetugas;
+    private String password;
+ 
+    public Petugas(String namaPetugas, String password) {
+        setNamaPetugas(namaPetugas);
+        setPassword(password);
     }
-    public int getIdPetugas() {
-        return idPetugas;
-    }
+ 
     public String getNamaPetugas() {
         return namaPetugas;
     }
-    public String getUsername() {
-        return username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public String getShift() {
-        return shift;
-    }
+ 
     public void setNamaPetugas(String namaPetugas) {
-        this.namaPetugas = namaPetugas;
+        if (namaPetugas == null || namaPetugas.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nama petugas tidak boleh kosong!");
+        }
+        this.namaPetugas = namaPetugas.trim();
     }
-    public void setUsername(String username) {
-        this.username = username;
-    }
+ 
     public void setPassword(String password) {
+        if (password == null || password.length() < 4) {
+            throw new IllegalArgumentException("Password minimal 4 karakter!");
+        }
         this.password = password;
     }
-    public void setShift(String shift) {
-        this.shift = shift;
-    }
-    public void tampilkanInfo() {
-        System.out.println("ID Petugas   : " + idPetugas);
-        System.out.println("Nama Petugas : " + namaPetugas);
-        System.out.println("Username     : " + username);
-        System.out.println("Shift        : " + shift);
+ 
+    public boolean cekLogin(String nama, String password) {
+        return namaPetugas.equals(nama.trim()) && this.password.equals(password);
     }
 }

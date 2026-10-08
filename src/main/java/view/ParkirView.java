@@ -4,221 +4,239 @@
  */
 package view;
 
+import java.time.format.DateTimeParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 import model.Kendaraan;
-import model.Petugas;
-import model.SlotParkir;
 import model.Parkir;
+import model.SlotParkir;
 
 /**
  *
  * @author ASUS
  */
 public class ParkirView {
-    private Scanner input;
-
+    private final Scanner input;
+ 
     public ParkirView(Scanner input) {
         this.input = input;
     }
-    // Validasi
+ 
+    //Validasi input
     public int inputIntPositif(String pesan) {
         while (true) {
             try {
                 System.out.print(pesan);
                 int angka = Integer.parseInt(input.nextLine().trim());
-
                 if (angka > 0) {
                     return angka;
                 }
-
                 System.out.println("Input harus lebih dari 0!");
-
             } catch (NumberFormatException e) {
                 System.out.println("Input harus berupa angka!");
             }
         }
     }
-    
+ 
+    public int inputIntRentang(String pesan, int min, int max) {
+        while (true) {
+            int angka = inputIntPositif(pesan);
+            if (angka >= min && angka <= max) {
+                return angka;
+            }
+            System.out.println("Input harus antara " + min + " sampai " + max + "!");
+        }
+    }
+ 
     public String inputTidakKosong(String pesan) {
         while (true) {
             System.out.print(pesan);
             String data = input.nextLine().trim();
-
             if (!data.isEmpty()) {
                 return data;
             }
-
             System.out.println("Input tidak boleh kosong!");
         }
     }
     
+    public String inputPassword(String pesan) {
+        java.io.Console konsol = System.console();
+        while (true) {
+            String data;
+            if (konsol != null) {
+                char[] karakter = konsol.readPassword(pesan);
+                data = (karakter == null) ? "" : new String(karakter).trim();
+            } else {
+                System.out.print(pesan);
+                data = input.nextLine().trim();
+            }
+            if (!data.isEmpty()) {
+                return data;
+            }
+            System.out.println("Input tidak boleh kosong!");
+        }
+    }
+ 
     public String inputMerk() {
-    while (true) {
-        System.out.print("Merk: ");
-        String merk = input.nextLine().trim();
-
-        if (merk.isEmpty()) {
-            System.out.println("Merk tidak boleh kosong!");
-        } else if (!merk.matches(".*[a-zA-Z].*")) {
+        while (true) {
+            String merk = inputTidakKosong("Merk: ");
+            if (merk.matches(".*[a-zA-Z].*")) {
+                return merk;
+            }
             System.out.println("Merk harus mengandung huruf!");
-        } else {
-            return merk;
         }
     }
-}
-    
+ 
     public String inputWarna() {
-    while (true) {
-        System.out.print("Warna: ");
-        String warna = input.nextLine().trim();
-
-        if (warna.isEmpty()) {
-            System.out.println("Warna tidak boleh kosong!");
-        } else if (!warna.matches("[a-zA-Z ]+")) {
+        while (true) {
+            String warna = inputTidakKosong("Warna: ");
+            if (warna.matches("[a-zA-Z ]+")) {
+                return warna;
+            }
             System.out.println("Warna hanya boleh berisi huruf!");
-        } else {
-            return warna;
         }
     }
-}
-    
+ 
+    public String inputNamaPetugas() {
+        while (true) {
+            String nama = inputTidakKosong("Nama Petugas: ");
+            if (nama.matches("[a-zA-Z ]+")) {
+                return nama;
+            }
+            System.out.println("Nama hanya boleh berisi huruf!");
+        }
+    }
+ 
     public String inputJenisKendaraan() {
         while (true) {
-            String jenis = inputTidakKosong(
-                    "Jenis Kendaraan (Motor/Mobil): "
-            );
-
-            if (jenis.equalsIgnoreCase("Motor")
-                    || jenis.equalsIgnoreCase("Mobil")) {
-                return jenis;
+            String jenis = inputTidakKosong("Jenis Kendaraan (Motor/Mobil): ");
+            if (jenis.equalsIgnoreCase("Motor")) {
+                return "Motor";
             }
-
-            System.out.println(
-                    "Jenis kendaraan hanya Motor atau Mobil!"
-            );
+            if (jenis.equalsIgnoreCase("Mobil")) {
+                return "Mobil";
+            }
+            System.out.println("Jenis kendaraan hanya Motor atau Mobil!");
         }
     }
-    
-    public String inputJenisSlot() {
-        while (true) {
-            String jenis = inputTidakKosong(
-                    "Jenis Slot (Motor/Mobil): "
-            );
-
-            if (jenis.equalsIgnoreCase("Motor")
-                    || jenis.equalsIgnoreCase("Mobil")) {
-                return jenis;
-            }
-
-            System.out.println(
-                    "Jenis slot hanya Motor atau Mobil!"
-            );
-        }
-    }
-    
+ 
     public String inputMetodePembayaran() {
         while (true) {
-            String metode = inputTidakKosong(
-                    "Metode Pembayaran (Cash/QRIS): "
-            );
-
-            if (metode.equalsIgnoreCase("Cash")
-                    || metode.equalsIgnoreCase("QRIS")) {
-                return metode;
+            String metode = inputTidakKosong("Metode Pembayaran (Cash/QRIS): ");
+            if (metode.equalsIgnoreCase("Cash")) {
+                return "Cash";
             }
-
-            System.out.println(
-                    "Metode pembayaran hanya Cash atau QRIS!"
-            );
+            if (metode.equalsIgnoreCase("QRIS")) {
+                return "QRIS";
+            }
+            System.out.println("Metode pembayaran hanya Cash atau QRIS!");
         }
     }
-    
+ 
+    public String inputWaktu(String label) {
+        while (true) {
+            String waktu = inputTidakKosong(label + " [format DD-MM-YYYY HH:MM, contoh 24-09-2026 17:30]: ");
+            try {
+                LocalDateTime.parse(waktu, Parkir.FORMAT_WAKTU);
+                return waktu;
+            } catch (DateTimeParseException e) {
+                System.out.println("Format/tanggal salah! Gunakan DD-MM-YYYY HH:MM.");
+            }
+        }
+    }
+ 
     public boolean konfirmasiHapus() {
         while (true) {
-            String pilihan = inputTidakKosong(
-                    "Yakin ingin menghapus data? (Y/T): "
-            );
-
+            String pilihan = inputTidakKosong("Yakin ingin menghapus data? (Y/T): ");
             if (pilihan.equalsIgnoreCase("Y")) {
                 return true;
             }
-
             if (pilihan.equalsIgnoreCase("T")) {
                 return false;
             }
-
             System.out.println("Masukkan Y atau T!");
         }
     }
-    
-     // Menu
-    public void tampilkanMenu() {
-        System.out.println();
-            System.out.println("|===================================================|");
-            System.out.println("|                                                   |");
-            System.out.println("|                🚗  MY PARKIR GW 🚗                  |");
-            System.out.println("|         SISTEM MANAJEMEN PARKIR KENDARAAN         |");
-            System.out.println("|                                                   |");
-            System.out.println("|           ------- Smart Parking  -------          |");
-            System.out.println("|                                                   |");
-            System.out.println("|===================================================|");
-            System.out.println("------------------- MENU UTAMA ----------------------");
-            System.out.println("|                                                   |");
-            System.out.println("|   [1]  Tambah Kendaraan                           |");
-            System.out.println("|   [2]  Tambah Petugas                             |");
-            System.out.println("|   [3]  Tambah Slot Parkir                         |");
-            System.out.println("|   [4]  Tambah Data Parkir                         |");
-            System.out.println("|   [5]  Lihat Data Parkir                          |");
-            System.out.println("|   [6]  Update Data Parkir                         |");
-            System.out.println("|   [7]  Hapus Data Parkir                          |");
-            System.out.println("|   [8]  Cari Data Parkir                           |");
-            System.out.println("|   [9]  Keluar                                     |");
-            System.out.println("|                                                   |");
-            System.out.println("-----------------------------------------------------");    
+ 
+    //Tampilan
+    private void baris(String teks) {
+        System.out.printf("|%-51s|%n", teks);
     }
-    
-    // Tampil Data
+ 
+    private String tengah(String teks) {
+        int kiri = Math.max(0, (51 - teks.length()) / 2);
+        StringBuilder hasil = new StringBuilder();
+        for (int i = 0; i < kiri; i++) {
+            hasil.append(' ');
+        }
+        return hasil.append(teks).toString();
+    }
+ 
+    public void tampilkanHeaderLogin() {
+        System.out.println();
+        System.out.println("|===================================================|");
+        baris(tengah("🚗 MY PARKIR GW 🚗"));
+        baris(tengah("LOGIN"));
+        System.out.println("|===================================================|");
+    }
+ 
+    public void tampilkanMenu(String namaPetugas) {
+        System.out.println();
+        System.out.println("|===================================================|");
+        baris("");
+        baris(tengah("MY PARKIR GW"));
+        baris(tengah("SISTEM MANAJEMEN PARKIR KENDARAAN"));
+        baris("");
+        System.out.println("|===================================================|");
+        baris(tengah("MENU UTAMA"));
+        baris("");
+        baris("   [1]  Tambah Kendaraan");
+        baris("   [2]  Masuk Parkir");
+        baris("   [3]  Lihat Data Parkir");
+        baris("   [4]  Keluar Parkir (hitung & bayar)");
+        baris("   [5]  Hapus Data Parkir");
+        baris("   [6]  Cari Data Parkir");
+        baris("   [7]  Lihat Slot Parkir");
+        baris("   [8]  Keluar");
+        baris("");
+        System.out.println("-----------------------------------------------------");
+    }
+ 
+    public void tampilkanRingkasanSlot(int motorKosong, int motorTotal,
+                                       int mobilKosong, int mobilTotal) {
+        System.out.println("Slot kosong -> Motor: " + motorKosong + "/" + motorTotal
+                + " | Mobil: " + mobilKosong + "/" + mobilTotal);
+    }
+ 
     public void tampilkanKendaraan(ArrayList<Kendaraan> daftar) {
         System.out.println("\n========== DATA KENDARAAN ==========");
-
         for (Kendaraan kendaraan : daftar) {
-            kendaraan.tampilkanInfo();
+            kendaraan.tampilkanInfo(); 
             System.out.println("------------------------------------");
         }
     }
-
-    public void tampilkanPetugas(ArrayList<Petugas> daftar) {
-        System.out.println("\n========== DATA PETUGAS ==========");
-
-        for (Petugas petugas : daftar) {
-            petugas.tampilkanInfo();
-            System.out.println("----------------------------------");
-        }
-    }
-    
+ 
     public void tampilkanSlot(ArrayList<SlotParkir> daftar) {
-        System.out.println("\n========== DATA SLOT ==========");
-
+        System.out.println("\n========== DATA SLOT PARKIR ==========");
+        System.out.printf("%-8s %-8s %-8s%n", "Slot", "Jenis", "Status");
         for (SlotParkir slot : daftar) {
-            slot.tampilkanInfo();
-            System.out.println("--------------------------------");
+            System.out.printf("%-8s %-8s %-8s%n",
+                    slot.getNomorSlot(), slot.getJenisSlot(), slot.getStatusSlot());
         }
     }
-
+ 
     public void tampilkanParkir(ArrayList<Parkir> daftar) {
         System.out.println();
-
         if (daftar.isEmpty()) {
             System.out.println("Belum ada data parkir.");
             return;
         }
-
         for (Parkir parkir : daftar) {
             parkir.tampilkanInfo();
         }
     }
-
+ 
     public void pesan(String pesan) {
         System.out.println(pesan);
     }

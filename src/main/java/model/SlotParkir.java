@@ -9,43 +9,45 @@ package model;
  * @author ASUS
  */
 public class SlotParkir {
-    private int idSlot;
-    private String nomorSlot;
-    private String jenisSlot;
+    public static final String KOSONG = "Kosong";
+    public static final String TERISI = "Terisi";
+ 
+    private final int idSlot;
+    private final String nomorSlot;
+    private final String jenisSlot;
     private String statusSlot;
-
-    public SlotParkir(int idSlot, String nomorSlot,
-                      String jenisSlot, String statusSlot) {
+ 
+    public SlotParkir(int idSlot, String nomorSlot, String jenisSlot) {
         this.idSlot = idSlot;
         this.nomorSlot = nomorSlot;
         this.jenisSlot = jenisSlot;
-        this.statusSlot = statusSlot;
+        this.statusSlot = KOSONG;
     }
+ 
     public int getIdSlot() {
         return idSlot;
     }
+ 
     public String getNomorSlot() {
         return nomorSlot;
     }
+ 
     public String getJenisSlot() {
         return jenisSlot;
     }
+ 
     public String getStatusSlot() {
         return statusSlot;
     }
-    public void setNomorSlot(String nomorSlot) {
-        this.nomorSlot = nomorSlot;
+ 
+    public boolean isKosong() {
+        return statusSlot.equals(KOSONG);
     }
-    public void setJenisSlot(String jenisSlot) {
-        this.jenisSlot = jenisSlot;
-    }
+ 
     public void setStatusSlot(String statusSlot) {
+        if (!KOSONG.equals(statusSlot) && !TERISI.equals(statusSlot)) {
+            throw new IllegalArgumentException("Status slot hanya Kosong atau Terisi!");
+        }
         this.statusSlot = statusSlot;
-    }
-    public void tampilkanInfo() {
-        System.out.println("ID Slot      : " + idSlot);
-        System.out.println("Nomor Slot   : " + nomorSlot);
-        System.out.println("Jenis Slot   : " + jenisSlot);
-        System.out.println("Status Slot  : " + statusSlot);
     }
 }
