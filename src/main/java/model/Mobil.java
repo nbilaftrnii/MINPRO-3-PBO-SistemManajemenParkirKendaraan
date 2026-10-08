@@ -35,14 +35,18 @@ public class Mobil extends Kendaraan{
     }
  
     @Override
-    public double hitungTarif(int lamaJam) {
-        return Math.min(TARIF_PER_JAM * lamaJam, TARIF_MAKSIMAL);
+    protected double getTarifPerJam() {
+        return TARIF_PER_JAM;
+    }
+ 
+    @Override
+    protected double getTarifMaksimal() {
+        return TARIF_MAKSIMAL;
     }
  
     @Override
     public void tampilkanInfo() {
-        System.out.println("- Data Mobil -");
         super.tampilkanInfo();
-        System.out.println("Jumlah Pintu : " + jumlahPintu);
+        System.out.printf("%-17s: %d%n", "Jumlah Pintu", jumlahPintu);
     }
 }

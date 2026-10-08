@@ -17,13 +17,15 @@ import model.SlotParkir;
  * @author ASUS
  */
 public class ParkirView {
+    private static final int LEBAR_MENU = 51;
+ 
     private final Scanner input;
  
     public ParkirView(Scanner input) {
         this.input = input;
     }
  
-    // ===== Validasi input =====
+    //Validasi input
     public int inputIntPositif(String pesan) {
         while (true) {
             try {
@@ -60,6 +62,53 @@ public class ParkirView {
         }
     }
  
+    private String inputDenganPola(String pesan, String pola, String pesanSalah) {
+        while (true) {
+            String data = inputTidakKosong(pesan);
+            if (data.matches(pola)) {
+                return data;
+            }
+            System.out.println(pesanSalah);
+        }
+    }
+ 
+    public String inputPilihan(String label, String... pilihan) {
+        String daftar = String.join("/", pilihan);
+        while (true) {
+            String data = inputTidakKosong(label + " (" + daftar + "): ");
+            for (String p : pilihan) {
+                if (p.equalsIgnoreCase(data)) {
+                    return p;
+                }
+            }
+            System.out.println("Pilihan hanya " + daftar + "!");
+        }
+    }
+ 
+    public String inputMerk() {
+        return inputDenganPola("Merk: ", ".*[a-zA-Z].*", "Merk harus mengandung huruf!");
+    }
+ 
+    public String inputWarna() {
+        return inputDenganPola("Warna: ", "[a-zA-Z ]+", "Warna hanya boleh berisi huruf!");
+    }
+ 
+    public String inputNamaPetugas() {
+        return inputDenganPola("Nama Petugas: ", "[a-zA-Z ]+", "Nama hanya boleh berisi huruf!");
+    }
+ 
+    public String inputJenisKendaraan() {
+        return inputPilihan("Jenis Kendaraan", "Motor", "Mobil");
+    }
+ 
+    public String inputMetodePembayaran() {
+        return inputPilihan("Metode Pembayaran", "Cash", "QRIS");
+    }
+ 
+    public boolean konfirmasiHapus() {
+        return inputPilihan("Yakin ingin menghapus data?", "Y", "T").equals("Y");
+    }
+ 
     public String inputPassword(String pesan) {
         java.io.Console konsol = System.console();
         while (true) {
@@ -78,65 +127,6 @@ public class ParkirView {
         }
     }
  
-    public String inputMerk() {
-        while (true) {
-            String merk = inputTidakKosong("Merk: ");
-            if (merk.matches(".*[a-zA-Z].*")) {
-                return merk;
-            }
-            System.out.println("Merk harus mengandung huruf!");
-        }
-    }
- 
-    public String inputWarna() {
-        while (true) {
-            String warna = inputTidakKosong("Warna: ");
-            if (warna.matches("[a-zA-Z ]+")) {
-                return warna;
-            }
-            System.out.println("Warna hanya boleh berisi huruf!");
-        }
-    }
- 
-    public String inputNamaPetugas() {
-        while (true) {
-            String nama = inputTidakKosong("Nama Petugas: ");
-            if (nama.matches("[a-zA-Z ]+")) {
-                return nama;
-            }
-            System.out.println("Nama hanya boleh berisi huruf!");
-        }
-    }
- 
-    // Mengembalikan "Motor" atau "Mobil" (sudah dirapikan huruf besar-kecilnya)
-    public String inputJenisKendaraan() {
-        while (true) {
-            String jenis = inputTidakKosong("Jenis Kendaraan (Motor/Mobil): ");
-            if (jenis.equalsIgnoreCase("Motor")) {
-                return "Motor";
-            }
-            if (jenis.equalsIgnoreCase("Mobil")) {
-                return "Mobil";
-            }
-            System.out.println("Jenis kendaraan hanya Motor atau Mobil!");
-        }
-    }
- 
-    // Mengembalikan "Cash" atau "QRIS"
-    public String inputMetodePembayaran() {
-        while (true) {
-            String metode = inputTidakKosong("Metode Pembayaran (Cash/QRIS): ");
-            if (metode.equalsIgnoreCase("Cash")) {
-                return "Cash";
-            }
-            if (metode.equalsIgnoreCase("QRIS")) {
-                return "QRIS";
-            }
-            System.out.println("Metode pembayaran hanya Cash atau QRIS!");
-        }
-    }
- 
-    // Format waktu: DD-MM-YYYY HH:MM, dicek benar-benar valid
     public String inputWaktu(String label) {
         while (true) {
             String waktu = inputTidakKosong(label + " [format DD-MM-YYYY HH:MM, contoh 24-09-2026 17:30]: ");
@@ -149,28 +139,22 @@ public class ParkirView {
         }
     }
  
-    public boolean konfirmasiHapus() {
-        while (true) {
-            String pilihan = inputTidakKosong("Yakin ingin menghapus data? (Y/T): ");
-            if (pilihan.equalsIgnoreCase("Y")) {
-                return true;
-            }
-            if (pilihan.equalsIgnoreCase("T")) {
-                return false;
-            }
-            System.out.println("Masukkan Y atau T!");
+    //Tampilan
+    private String garis(char karakter) {
+        StringBuilder hasil = new StringBuilder("|");
+        for (int i = 0; i < LEBAR_MENU; i++) {
+            hasil.append(karakter);
         }
+        return hasil.append("|").toString();
     }
  
-    //Tampilan 
     private void baris(String teks) {
-        System.out.printf("|%-51s|%n", teks);
+        System.out.printf("|%-" + LEBAR_MENU + "s|%n", teks);
     }
  
     private String tengah(String teks) {
-        int kiri = Math.max(0, (51 - teks.length()) / 2);
         StringBuilder hasil = new StringBuilder();
-        for (int i = 0; i < kiri; i++) {
+        for (int i = 0; i < (LEBAR_MENU - teks.length()) / 2; i++) {
             hasil.append(' ');
         }
         return hasil.append(teks).toString();
@@ -178,32 +162,31 @@ public class ParkirView {
  
     public void tampilkanHeaderLogin() {
         System.out.println();
-        System.out.println("|===================================================|");
-        baris(tengah("🚗 MY PARKIR GW 🚗"));
-        baris(tengah("LOGIN"));
-        System.out.println("|===================================================|");
+        System.out.println(garis('='));
+        baris(tengah("MY PARKIR GW"));
+        baris(tengah("LOGIN PETUGAS"));
+        System.out.println(garis('='));
     }
  
-    public void tampilkanMenu() {
+    public void tampilkanMenu(String namaPetugas) {
         System.out.println();
-        System.out.println("|===================================================|");
-            System.out.println("|                                                   |");
-            System.out.println("|                🚗  MY PARKIR GW 🚗                  |");
-            System.out.println("|         SISTEM MANAJEMEN PARKIR KENDARAAN         |");
-            System.out.println("|                                                   |");
-            System.out.println("|           ------- Smart Parking  -------          |");
-            System.out.println("|                                                   |");
-            System.out.println("|===================================================|");
-            System.out.println("------------------- MENU UTAMA ----------------------");
-            System.out.println("|                                                   |");
-            System.out.println("|   [1]  Masuk Parkir                               |");
-            System.out.println("|   [2]  Lihat Data Parkir                          |");
-            System.out.println("|   [3]  Keluar Parkir                              |");
-            System.out.println("|   [4]  Hapus Data Parkir                          |");
-            System.out.println("|   [5]  Cari Data Parkir                           |");
-            System.out.println("|   [6]  Keluar                                     |");
-            System.out.println("|                                                   |");
-            System.out.println("-----------------------------------------------------");    
+        System.out.println(garis('='));
+        baris("");
+        baris(tengah("MY PARKIR GW"));
+        baris(tengah("SISTEM MANAJEMEN PARKIR KENDARAAN"));
+        baris("");
+        baris(tengah("Petugas: " + namaPetugas));
+        System.out.println(garis('='));
+        baris(tengah("MENU UTAMA"));
+        baris("");
+        baris("   [1]  Masuk Parkir (daftar + slot otomatis)");
+        baris("   [2]  Lihat Data Parkir");
+        baris("   [3]  Keluar Parkir (hitung & bayar)");
+        baris("   [4]  Hapus Data Parkir");
+        baris("   [5]  Cari Data Parkir");
+        baris("   [6]  Keluar");
+        baris("");
+        System.out.println(garis('-'));
     }
  
     public void tampilkanRingkasanSlot(int motorKosong, int motorTotal,
@@ -212,18 +195,24 @@ public class ParkirView {
                 + " | Mobil: " + mobilKosong + "/" + mobilTotal);
     }
  
-    public void tampilkanKendaraan(ArrayList<Kendaraan> daftar) {
-        System.out.println("\n========== DATA KENDARAAN ==========");
-        for (Kendaraan kendaraan : daftar) {
-            kendaraan.tampilkanInfo(); // polymorphism: Motor / Mobil
-            System.out.println("------------------------------------");
+    public int tampilkanParkirAktif(ArrayList<Parkir> daftar) {
+        int jumlah = 0;
+        System.out.println("\n=========== KENDARAAN YANG SEDANG PARKIR ===========");
+        System.out.printf("%-9s %-12s %-6s %-16s%n", "ID Parkir", "Plat", "Slot", "Waktu Masuk");
+        for (Parkir parkir : daftar) {
+            if (parkir.getStatusParkir().equals(Parkir.MASIH_PARKIR)) {
+                System.out.printf("%-9d %-12s %-6s %-16s%n", parkir.getIdParkir(),
+                        parkir.getKendaraan().getNomorPlat(), parkir.getSlot().getNomorSlot(),
+                        parkir.getWaktuMasuk());
+                jumlah++;
+            }
         }
+        return jumlah;
     }
  
     public void tampilkanParkir(ArrayList<Parkir> daftar) {
-        System.out.println();
         if (daftar.isEmpty()) {
-            System.out.println("Belum ada data parkir.");
+            System.out.println("\nBelum ada data parkir.");
             return;
         }
         for (Parkir parkir : daftar) {

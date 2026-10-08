@@ -35,14 +35,18 @@ public class Motor extends Kendaraan {
     }
  
     @Override
-    public double hitungTarif(int lamaJam) {
-        return Math.min(TARIF_PER_JAM * lamaJam, TARIF_MAKSIMAL);
+    protected double getTarifPerJam() {
+        return TARIF_PER_JAM;
+    }
+ 
+    @Override
+    protected double getTarifMaksimal() {
+        return TARIF_MAKSIMAL;
     }
  
     @Override
     public void tampilkanInfo() {
-        System.out.println("- Data Motor -");
         super.tampilkanInfo();
-        System.out.println("Kapasitas CC : " + kapasitasCC + " cc");
+        System.out.printf("%-17s: %d cc%n", "Kapasitas CC", kapasitasCC);
     }
 }

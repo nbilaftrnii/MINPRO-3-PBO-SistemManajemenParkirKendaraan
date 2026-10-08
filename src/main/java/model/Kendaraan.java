@@ -37,34 +37,45 @@ public abstract class Kendaraan implements Bertarif {
         return warna;
     }
  
+    // Setter dengan kondisi: data tidak boleh kosong
     public void setNomorPlat(String nomorPlat) {
-        if (nomorPlat == null || nomorPlat.trim().isEmpty()) {
-            throw new IllegalArgumentException("Nomor plat tidak boleh kosong!");
-        }
-        this.nomorPlat = nomorPlat.trim().toUpperCase();
+        this.nomorPlat = wajibIsi(nomorPlat, "Nomor plat").toUpperCase();
     }
  
     public void setMerk(String merk) {
-        if (merk == null || merk.trim().isEmpty()) {
-            throw new IllegalArgumentException("Merk tidak boleh kosong!");
-        }
-        this.merk = merk.trim();
+        this.merk = wajibIsi(merk, "Merk");
     }
  
     public void setWarna(String warna) {
-        if (warna == null || warna.trim().isEmpty()) {
-            throw new IllegalArgumentException("Warna tidak boleh kosong!");
-        }
-        this.warna = warna.trim();
+        this.warna = wajibIsi(warna, "Warna");
     }
  
+    private static String wajibIsi(String nilai, String namaData) {
+        if (nilai == null || nilai.trim().isEmpty()) {
+            throw new IllegalArgumentException(namaData + " tidak boleh kosong!");
+        }
+        return nilai.trim();
+    }
+ 
+    // ===== Abstract method: wajib di-override oleh Motor dan Mobil =====
     public abstract String getJenisKendaraan();
  
+    protected abstract double getTarifPerJam();
+ 
+    protected abstract double getTarifMaksimal();
+ 
+    // Rumus tarif ditulis SATU kali di sini (dari interface Bertarif),
+    // angka tarifnya diambil dari subclass masing-masing.
+    @Override
+    public double hitungTarif(int lamaJam) {
+        return Math.min(getTarifPerJam() * lamaJam, getTarifMaksimal());
+    }
+ 
     public void tampilkanInfo() {
-        System.out.println("ID Kendaraan : " + idKendaraan);
-        System.out.println("Nomor Plat   : " + nomorPlat);
-        System.out.println("Jenis        : " + getJenisKendaraan());
-        System.out.println("Merk         : " + merk);
-        System.out.println("Warna        : " + warna);
+        System.out.printf("%-17s: %d%n", "ID Kendaraan", idKendaraan);
+        System.out.printf("%-17s: %s%n", "Nomor Plat", nomorPlat);
+        System.out.printf("%-17s: %s%n", "Jenis Kendaraan", getJenisKendaraan());
+        System.out.printf("%-17s: %s%n", "Merk", merk);
+        System.out.printf("%-17s: %s%n", "Warna", warna);
     }
 }

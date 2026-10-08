@@ -12,20 +12,14 @@ public class SlotParkir {
     public static final String KOSONG = "Kosong";
     public static final String TERISI = "Terisi";
  
-    private final int idSlot;
     private final String nomorSlot;
     private final String jenisSlot;
     private String statusSlot;
  
-    public SlotParkir(int idSlot, String nomorSlot, String jenisSlot) {
-        this.idSlot = idSlot;
+    public SlotParkir(String nomorSlot, String jenisSlot) {
         this.nomorSlot = nomorSlot;
         this.jenisSlot = jenisSlot;
         this.statusSlot = KOSONG;
-    }
- 
-    public int getIdSlot() {
-        return idSlot;
     }
  
     public String getNomorSlot() {
@@ -42,6 +36,16 @@ public class SlotParkir {
  
     public boolean isKosong() {
         return statusSlot.equals(KOSONG);
+    }
+ 
+    //Dipanggil saat kendaraan masuk
+    public void isi() {
+        setStatusSlot(TERISI);
+    }
+ 
+    //Dipanggil saat kendaraan keluar
+    public void kosongkan() {
+        setStatusSlot(KOSONG);
     }
  
     public void setStatusSlot(String statusSlot) {

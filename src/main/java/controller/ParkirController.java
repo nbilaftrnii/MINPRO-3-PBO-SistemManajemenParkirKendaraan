@@ -18,6 +18,8 @@ import view.ParkirView;
  * @author ASUS
  */
 public class ParkirController {
+    private static final int MAKS_PERCOBAAN_LOGIN = 3;
+ 
     private final ParkirService service;
     private final ParkirView view;
     private Petugas petugasAktif;
@@ -28,19 +30,18 @@ public class ParkirController {
     }
  
     public void jalankan() {
-        petugasAktif = masukPetugas();
+        petugasAktif = login();
         if (petugasAktif == null) {
-            view.pesan("Login gagal 3 kali. Program ditutup.");
+            view.pesan("Login gagal " + MAKS_PERCOBAAN_LOGIN + " kali. Program ditutup.");
             return;
         }
  
         boolean berjalan = true;
         while (berjalan) {
-            view.tampilkanMenu();
+            view.tampilkanMenu(petugasAktif.getNamaPetugas());
             tampilkanRingkasanSlot();
  
-            int pilihan = view.inputIntPositif("Pilih menu: ");
-            switch (pilihan) {
+            switch (view.inputIntPositif("Pilih menu: ")) {
                 case 1:
                     masukParkir();
                     break;
@@ -57,21 +58,18 @@ public class ParkirController {
                     cariParkir();
                     break;
                 case 6:
-                    view.tampilkanSlot(service.getAllSlot());
-                    break;
-                case 7:
                     berjalan = false;
                     view.pesan("Sampai jumpa, " + petugasAktif.getNamaPetugas() + "!");
                     break;
                 default:
-                    view.pesan("Menu hanya 1 sampai 7!");
+                    view.pesan("Menu hanya 1 sampai 6!");
             }
         }
     }
  
-    private Petugas masukPetugas() {
+    private Petugas login() {
         view.tampilkanHeaderLogin();
-        for (int percobaan = 1; percobaan <= 3; percobaan++) {
+        for (int percobaan = 1; percobaan <= MAKS_PERCOBAAN_LOGIN; percobaan++) {
             String nama = view.inputNamaPetugas();
             String password = view.inputPassword("Password: ");
  
@@ -80,7 +78,7 @@ public class ParkirController {
                 view.pesan("Login berhasil. Selamat bertugas, " + petugas.getNamaPetugas() + "!");
                 return petugas;
             }
-            view.pesan("Nama atau password salah! (percobaan " + percobaan + "/3)");
+            view.pesan("Nama atau password salah! (percobaan " + percobaan + "/" + MAKS_PERCOBAAN_LOGIN + ")");
         }
         return null;
     }
@@ -96,31 +94,34 @@ public class ParkirController {
         String plat = view.inputTidakKosong("Nomor Plat: ");
  
         Kendaraan kendaraan = service.cariKendaraan(plat); // overloading: cari by plat
-        if (kendaraan != null) {
-            // Plat pernah terdaftar: data lama dipakai lagi
+        boolean kendaraanBaru = (kendaraan == null);
+        String jenis;
+ 
+        if (kendaraanBaru) {
+            jenis = view.inputJenisKendaraan();
+        } else {
             if (service.sedangParkir(kendaraan)) {
                 view.pesan("Kendaraan dengan plat ini masih parkir!");
                 return;
             }
-            view.pesan("Kendaraan sudah terdaftar (" + kendaraan.getJenisKendaraan()
-                    + " " + kendaraan.getMerk() + "), data lama dipakai.");
-        } else {
-            kendaraan = daftarKendaraanBaru(plat);
+            jenis = kendaraan.getJenisKendaraan();
+            view.pesan("Kendaraan sudah terdaftar (" + jenis + " " + kendaraan.getMerk()
+                    + "), data lama dipakai.");
         }
  
-        SlotParkir slot = service.cariSlotKosong(kendaraan.getJenisKendaraan());
+        //Mengecek Slot        
+        SlotParkir slot = service.cariSlotKosong(jenis);
         if (slot == null) {
-            view.pesan("Maaf, slot " + kendaraan.getJenisKendaraan() + " sudah penuh!");
+            view.pesan("Maaf, slot " + jenis + " sudah penuh!");
             return;
         }
  
-        String waktuMasuk = view.inputWaktu("Waktu Masuk");
- 
-        // Kendaraan baru baru disimpan setelah semua pengecekan lolos
-        if (service.cariKendaraan(kendaraan.getIdKendaraan()) == null) { // overloading: cari by ID
+        if (kendaraanBaru) {
+            kendaraan = buatKendaraan(plat, jenis);
             service.tambahKendaraan(kendaraan);
         }
  
+        String waktuMasuk = view.inputWaktu("Waktu Masuk");
         Parkir parkir = new Parkir(service.generateIdParkir(), kendaraan,
                 petugasAktif, slot, waktuMasuk);
         service.tambahParkir(parkir);
@@ -129,11 +130,10 @@ public class ParkirController {
                 + ". ID Parkir: " + parkir.getIdParkir());
     }
  
-    private Kendaraan daftarKendaraanBaru(String plat) {
-        String jenis = view.inputJenisKendaraan();
+    private Kendaraan buatKendaraan(String plat, String jenis) {
+        int id = service.generateIdKendaraan();
         String merk = view.inputMerk();
         String warna = view.inputWarna();
-        int id = service.generateIdKendaraan();
  
         if (jenis.equals("Motor")) {
             int cc = view.inputIntRentang("Kapasitas mesin (cc, 50-2000): ", 50, 2000);
@@ -146,10 +146,12 @@ public class ParkirController {
     //Keluar Parkir (update)
     private void keluarParkir() {
         System.out.println("\n=== KELUAR PARKIR ===");
-        view.tampilkanParkir(service.getAllParkir());
+        if (view.tampilkanParkirAktif(service.getAllParkir()) == 0) {
+            view.pesan("Tidak ada kendaraan yang sedang parkir.");
+            return;
+        }
  
-        int id = view.inputIntPositif("ID Parkir yang keluar: ");
-        Parkir parkir = service.cariById(id);
+        Parkir parkir = service.cariById(view.inputIntPositif("ID Parkir yang keluar: "));
         if (parkir == null) {
             view.pesan("Data parkir tidak ditemukan!");
             return;
@@ -162,17 +164,16 @@ public class ParkirController {
         view.pesan("Waktu masuk  : " + parkir.getWaktuMasuk());
         int lamaJam = view.inputIntPositif("Lama Parkir (jam): ");
  
-        // Waktu keluar otomatis menyesuaikan: waktu masuk + lama parkir
         String waktuKeluar = parkir.hitungWaktuKeluar(lamaJam);
         view.pesan("Waktu keluar : " + waktuKeluar + " (otomatis)");
  
         String metode = view.inputMetodePembayaran();
         int tarif = (int) parkir.hitungTarif(lamaJam);
-        view.pesan("Total tarif : Rp" + tarif);
+        view.pesan("Total tarif  : Rp" + tarif);
  
         int jumlahBayar;
         if (metode.equals("QRIS")) {
-            jumlahBayar = tarif; // QRIS: otomatis sesuai tarif
+            jumlahBayar = tarif; 
             view.pesan("Pembayaran QRIS sesuai tarif: Rp" + tarif);
         } else {
             jumlahBayar = view.inputIntPositif("Jumlah Bayar: Rp");
@@ -182,7 +183,7 @@ public class ParkirController {
             }
         }
  
-        service.updateParkir(parkir, waktuKeluar, lamaJam, metode, jumlahBayar);
+        service.updateParkir(parkir, waktuKeluar, metode, jumlahBayar, tarif);
         view.pesan("Kendaraan berhasil keluar.");
         parkir.cetakStruk(lamaJam);
     }
@@ -192,8 +193,7 @@ public class ParkirController {
         System.out.println("\n=== HAPUS DATA PARKIR ===");
         view.tampilkanParkir(service.getAllParkir());
  
-        int id = view.inputIntPositif("ID Parkir yang dihapus: ");
-        Parkir parkir = service.cariById(id);
+        Parkir parkir = service.cariById(view.inputIntPositif("ID Parkir yang dihapus: "));
         if (parkir == null) {
             view.pesan("Data parkir tidak ditemukan!");
             return;
@@ -213,8 +213,7 @@ public class ParkirController {
     //Cari
     private void cariParkir() {
         System.out.println("\n=== CARI DATA PARKIR ===");
-        int id = view.inputIntPositif("ID Parkir: ");
-        Parkir parkir = service.cariById(id);
+        Parkir parkir = service.cariById(view.inputIntPositif("ID Parkir: "));
         if (parkir == null) {
             view.pesan("Data parkir tidak ditemukan!");
             return;

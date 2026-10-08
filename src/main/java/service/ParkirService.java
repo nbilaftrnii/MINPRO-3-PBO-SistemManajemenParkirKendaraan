@@ -13,6 +13,9 @@ import java.util.List;
  * @author ASUS
  */
 public class ParkirService {
+    private static final int JUMLAH_SLOT_MOTOR = 5;
+    private static final int JUMLAH_SLOT_MOBIL = 3;
+ 
     private final ArrayList<Petugas> daftarPetugas = new ArrayList<>();
     private final ArrayList<Kendaraan> daftarKendaraan = new ArrayList<>();
     private final ArrayList<SlotParkir> daftarSlot = new ArrayList<>();
@@ -22,24 +25,25 @@ public class ParkirService {
     private int idParkirBerikutnya = 2;
  
     public ParkirService() {
-        daftarPetugas.add(new Petugas("Jai", "12345"));
-        daftarPetugas.add(new Petugas("Dimas", "54321"));
+        //Akun petugas (tambah/ubah akun dilakukan di sini)
+        daftarPetugas.add(new Petugas("Andi", "12345"));
+        daftarPetugas.add(new Petugas("Budi", "54321"));
  
-        int idSlot = 1;
-        for (int i = 1; i <= 30; i++) {
-            daftarSlot.add(new SlotParkir(idSlot++, String.format("A%02d", i), "Motor"));
-        }
-        for (int i = 1; i <= 10; i++) {
-            daftarSlot.add(new SlotParkir(idSlot++, String.format("B%02d", i), "Mobil"));
-        }
+        buatSlot("A", "Motor", JUMLAH_SLOT_MOTOR);
+        buatSlot("B", "Mobil", JUMLAH_SLOT_MOBIL);
  
-        // Dummy data kendaraan & parkir
+        //Dummy data kendaraan & parkir
         Kendaraan kendaraan = new Motor(1, "KT 1234 AB", "Honda Vario", "Hitam", 125);
         daftarKendaraan.add(kendaraan);
  
-        Parkir parkir = new Parkir(1, kendaraan, daftarPetugas.get(0),
-                cariSlotKosong("Motor"), "24-09-2026 08:00");
-        tambahParkir(parkir);
+        tambahParkir(new Parkir(1, kendaraan, daftarPetugas.get(0),
+                cariSlotKosong("Motor"), "24-09-2026 08:00"));
+    }
+ 
+    private void buatSlot(String awalan, String jenis, int jumlah) {
+        for (int i = 1; i <= jumlah; i++) {
+            daftarSlot.add(new SlotParkir(awalan + String.format("%02d", i), jenis));
+        }
     }
  
     public Petugas login(String nama, String password) {
@@ -65,6 +69,7 @@ public class ParkirService {
         daftarKendaraan.add(kendaraan);
     }
  
+    // Overloading, cari berdasarkan ID
     public Kendaraan cariKendaraan(int id) {
         for (Kendaraan kendaraan : daftarKendaraan) {
             if (kendaraan.getIdKendaraan() == id) {
@@ -74,6 +79,7 @@ public class ParkirService {
         return null;
     }
  
+    // Overloading, cari berdasarkan nomor plat
     public Kendaraan cariKendaraan(String nomorPlat) {
         for (Kendaraan kendaraan : daftarKendaraan) {
             if (kendaraan.getNomorPlat().equalsIgnoreCase(nomorPlat.trim())) {
@@ -83,16 +89,7 @@ public class ParkirService {
         return null;
     }
  
-    public ArrayList<Kendaraan> getAllKendaraan() {
-        return daftarKendaraan;
-    }
- 
     //Slot
-    public ArrayList<SlotParkir> getAllSlot() {
-        return daftarSlot;
-    }
- 
-    // Slot dipilih otomatis, slot kosong pertama yang jenisnya cocok
     public SlotParkir cariSlotKosong(String jenis) {
         for (SlotParkir slot : daftarSlot) {
             if (slot.isKosong() && slot.getJenisSlot().equalsIgnoreCase(jenis)) {
@@ -103,19 +100,17 @@ public class ParkirService {
     }
  
     public int hitungSlotKosong(String jenis) {
-        int jumlah = 0;
-        for (SlotParkir slot : daftarSlot) {
-            if (slot.isKosong() && slot.getJenisSlot().equalsIgnoreCase(jenis)) {
-                jumlah++;
-            }
-        }
-        return jumlah;
+        return hitungSlot(jenis, true);
     }
  
     public int hitungTotalSlot(String jenis) {
+        return hitungSlot(jenis, false);
+    }
+ 
+    private int hitungSlot(String jenis, boolean hanyaKosong) {
         int jumlah = 0;
         for (SlotParkir slot : daftarSlot) {
-            if (slot.getJenisSlot().equalsIgnoreCase(jenis)) {
+            if (slot.getJenisSlot().equalsIgnoreCase(jenis) && (!hanyaKosong || slot.isKosong())) {
                 jumlah++;
             }
         }
@@ -135,7 +130,7 @@ public class ParkirService {
  
     public void tambahParkir(Parkir parkir) {
         daftarParkir.add(parkir);
-        parkir.getSlot().setStatusSlot(SlotParkir.TERISI);
+        parkir.getSlot().isi();
     }
  
     public ArrayList<Parkir> getAllParkir() {
@@ -151,10 +146,8 @@ public class ParkirService {
         return null;
     }
  
-    public void updateParkir(Parkir parkir, String waktuKeluar, int lamaJam,
-                             String metodePembayaran, int jumlahBayar) {
-        int tarif = (int) parkir.hitungTarif(lamaJam);
- 
+    public void updateParkir(Parkir parkir, String waktuKeluar, String metodePembayaran,
+                             int jumlahBayar, int tarif) {
         parkir.setWaktuKeluar(waktuKeluar);
         parkir.setMetodePembayaran(metodePembayaran);
         parkir.setJumlahBayar(jumlahBayar);
@@ -162,13 +155,13 @@ public class ParkirService {
         parkir.setStatusPembayaran(jumlahBayar >= tarif ? "Lunas" : "Belum Lunas");
  
         // Kendaraan keluar >> slot kosong lagi
-        parkir.getSlot().setStatusSlot(SlotParkir.KOSONG);
+        parkir.getSlot().kosongkan();
     }
  
     public void hapusParkir(Parkir parkir) {
         // Slot dikosongkan hanya jika kendaraan masih parkir
         if (parkir.getStatusParkir().equals(Parkir.MASIH_PARKIR)) {
-            parkir.getSlot().setStatusSlot(SlotParkir.KOSONG);
+            parkir.getSlot().kosongkan();
         }
         daftarParkir.remove(parkir);
     }

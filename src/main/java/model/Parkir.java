@@ -4,7 +4,6 @@
  */
 package model;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
@@ -15,8 +14,7 @@ import java.time.format.ResolverStyle;
 public class Parkir {
     public static final String MASIH_PARKIR = "Masih Parkir";
     public static final String SELESAI = "Selesai";
- 
-    public static final DateTimeFormatter FORMAT_WAKTU =
+     public static final DateTimeFormatter FORMAT_WAKTU =
             DateTimeFormatter.ofPattern("dd-MM-uuuu HH:mm")
                     .withResolverStyle(ResolverStyle.STRICT);
  
@@ -125,21 +123,14 @@ public class Parkir {
     public double hitungTarif(int lamaJam) {
         return kendaraan.hitungTarif(lamaJam);
     }
-    
+ 
     public String hitungWaktuKeluar(int lamaJam) {
         LocalDateTime masuk = LocalDateTime.parse(waktuMasuk, FORMAT_WAKTU);
         return masuk.plusHours(lamaJam).format(FORMAT_WAKTU);
     }
  
-    // Lama parkir otomatis dari waktu masuk & keluar (dibulatkan ke atas, minimal 1 jam).
-    public int hitungLamaJam(String waktuKeluar) {
-        LocalDateTime masuk = LocalDateTime.parse(waktuMasuk, FORMAT_WAKTU);
-        LocalDateTime keluar = LocalDateTime.parse(waktuKeluar, FORMAT_WAKTU);
-        long menit = Duration.between(masuk, keluar).toMinutes();
-        if (menit <= 0) {
-            return 0;
-        }
-        return (int) Math.ceil(menit / 60.0);
+    private void cetak(String label, Object nilai) {
+        System.out.printf("%-17s: %s%n", label, nilai);
     }
  
     public void tampilkanInfo() {
