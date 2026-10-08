@@ -185,7 +185,7 @@ public class ParkirView {
         System.out.println("|   [3]  Keluar Parkir                              |");
         System.out.println("|   [4]  Hapus Data Parkir                          |");
         System.out.println("|   [5]  Cari Data Parkir                           |");
-        System.out.println("|   [6]  Keluar                                     |");
+        System.out.println("|   [6]  Logout                                     |");
         System.out.println("|                                                   |");
         System.out.println("-----------------------------------------------------");    
     }
